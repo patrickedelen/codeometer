@@ -30,7 +30,7 @@ function activate(context) {
         if(setEmail){
             userEmail = newEmail;
         } else {
-            vscode.window.showInformationMessage('Try again while highlighting your email');
+            vscode.window.showInformationMessage('Try again while highlighting your twitter handle');
             return;
         }
 
@@ -41,11 +41,11 @@ function activate(context) {
 
         runningTotalLines = lineCounter.totalLines;
 
-        vscode.window.showInformationMessage('Codeometer started for email: ' + userEmail);
+        vscode.window.showInformationMessage('Codeometer started for handle: ' + userEmail);
 
         //create the user's account
         request
-            .post('http://localhost:3000/api/user/create')
+            .post('http://codeometer.com/api/user/create')
             .form({email: userEmail})
             .on('response', function(response) {
                 //console.log(response);
@@ -87,7 +87,7 @@ class LineCounter {
 
         if(report){
             request
-                .post('http://localhost:3000/api/user/report')
+                .post('http://codeometer.com/api/user/report')
                 .form({email: userEmail, report: lineCt});
         }
 
