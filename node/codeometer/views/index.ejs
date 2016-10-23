@@ -1,11 +1,125 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Codeometer</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.js"></script> 
+
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Bootstrap Material Design -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-material-design.css">
+    <link rel="stylesheet" type="text/css" href="/css/ripples.css">
+
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div class="header-panel">
+            <div class="navbar navbar-info">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-material-light-blue-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="/">Codeometer</a>
+                </div>
+                <div class="navbar-collapse collapse navbar-material-light-blue-collapse">
+                  <ul class="nav navbar-nav">
+                    <li><a href="https://github.com/patrickedelen/codeometer">Download</a></li>
+                    <li><a href="https://twitter.com/code_alerts">Twitter</a></li>
+                    <li><a href="https://github.com/patrickedelen/codeometer">Github</a></li>
+                    
+                  </ul>
+                  <form class="navbar-form navbar-right" id="email-form" action="/api/user/get" method="POST">
+                    <div class="form-group">
+                      <input id="email" type="text" name="email" class="form-control col-sm-8" placeholder="Your Handle">
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+    </div>
+
+    <div class="container-fluid main">
+      <div class="row margin-s">
+        <div class="col-md-10 col-md-offset-1 page">
+          <div class="card padding text-center">
+              <h1>Current Leaderboard</h1>
+
+              <div id="leaderboard">
+              </div>
+              <script type="text/JavaScript">
+                $.get("/api/user/all", function(data){
+                  data.sort(function(a,b) {
+                    var linesA = a.totalLines,
+                        linesB = b.totalLines;
+
+                    if(linesA < linesB) {return 1;}
+                    if(linesA > linesB) {return -1;}
+                  });
+                  console.log(data);
+
+                  var dataHTML = '';
+
+                  data.forEach(function(element) {
+                    dataHTML += '<h4>' + element.email + '  |  ' + element.totalLines + ' lines' + '</h4>';
+                  })
+
+                  $('#leaderboard').html(dataHTML);
+                });
+              </script>
+          </div>
+        </div>
+      </div>
+      <div class="row margin-s">
+        <div class="col-xs-5 col-xs-offset-1">
+          <div class="card padding text-center">
+            <h2>Team Info</h2>
+            <div id="teamInfo">
+              <h4 id="teamInfoh4">Enter a Twitter handle to view info!</h4>
+
+              <div class="graph_container">
+							<canvas id="teamChart"></canvas>
+              <form class="navbar-form navbar-right hidden" id="none" action="/api/user/addMember" method="POST">
+              <div class="form-group">
+                <label class=""></label>
+                <input id="member" type="text" name="none" class="form-control col-sm-8" placeholder="">
+              </div>
+            </form>
+						</div>
+            </div>
+          
+          </div>
+        </div>
+        <div class="col-xs-5">
+          <div class="card padding text-center">
+            <h2>Your Info</h2>
+            <div id="individualInfo">
+              <h4>Enter a Twitter handle to view info!</h4>
+            </div>
+            <div class="graph_container">
+							<canvas id="individualChart"></canvas>
+						</div>
+            <form class="navbar-form navbar-right hidden" id="member-form" action="/api/user/addMember" method="POST">
+              <div class="form-group">
+                <label class="">Add a team member!</label>
+                <input id="member" type="text" name="member" class="form-control col-sm-8" placeholder="Member Handle">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
+  <script type="text/javascript" src="/js/material.js"></script>
+  <script type="text/javascript" src="/js/ripples.js"></script>
+  <script type="text/javascript" src="/javascripts/home.js"></script>
 </html>

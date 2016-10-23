@@ -79,7 +79,7 @@ class LineCounter {
         let doc = editor.document;
 
 
-        let lineCt = this.totalLines - runningTotalLines;
+        let lineCt = Math.abs(this.totalLines - runningTotalLines);
 
         // Update the status bar
         this._statusBarItem.text = lineCt !== 1 ? `${lineCt} Logged Lines` : '1 Logged Line';
@@ -115,12 +115,12 @@ class LineCounter {
             console.log('Timer started');
             setTimeout(function() {
                 that.updateLineCount(true);
-            }, 100000);//100 secs
+            }, 10000);//100 secs
         } else if(this._timer){
             console.log('Report sent');
             setTimeout(function() {
                 that.updateLineCount(true);
-            }, 100000);
+            }, 10000);
 
         }
     }

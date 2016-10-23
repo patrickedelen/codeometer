@@ -3,6 +3,8 @@ var router = express.Router();
 
 var user = require('../models/user.js');
 
+var tweetHandler = require('../bin/tweetHandler.js');
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -48,6 +50,34 @@ router.post('/api/user/report', function(req, res, next) {
         selUser[0].save();
 
         res.json({message: 'Report added'});
+
+        tweetHandler.updateTweets(selUser[0]);
+      }
+    });
+  } else {
+    res.json({error: 'No email specified'});
+  }
+
+  //update tweeting
+
+
+});
+
+router.post('/api/user/addMember', function(req, res, next) {
+  console.log(req.body.email);
+  console.log(req.body.member);
+  
+  if(req.body.email){  
+    user.find({email: req.body.email}, function(err, selUser){
+      if(err){
+        console.log(err);
+      } else {
+
+        selUser[0].team.push(req.body.member)
+
+        selUser[0].save();
+
+        res.json({message: 'Member added'});
       }
     });
   } else {
@@ -65,6 +95,16 @@ router.get('/api/user/all', function(req, res, next) {
         res.json(users);
       }
   });
+
+router.post('/api/user/get', function(req, res, next) {
+  user.findOne({email: req.body.email}, function(err, foundUser) {
+   if(err){
+     res.json({err: 'Request error: user not found'});
+   } else {
+     res.json(foundUser);
+   }
+  });
+});
 
 });
 module.exports = router;
